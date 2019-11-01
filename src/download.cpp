@@ -126,9 +126,6 @@ void Download::start(QString callbackId, QString url, QString name, QString stor
     QString basePath = getDownloadPath(downloadManager->getStorage());
     QString path = basePath + "/" + name;
 
-
-    QString path = basePath + "/" + name;
-
     // 判断当前文件是否重复，如果重复名称添加序号
     QStringList nameSplit = name.split(".");
     int i = 1;
