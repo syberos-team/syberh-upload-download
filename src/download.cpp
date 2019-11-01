@@ -220,8 +220,8 @@ void Download::onReplyFinished(QString downloadId, QString path, int statusCode,
     // 删除缓存文件路径
     fileNames.remove(taskInfo->downloadManager->getMPath());
 
-    // 根据状态码判断当前下载是否出错;
-    if (statusCode > 200 && statusCode < 400) {
+    // 根据状态码判断当前下载是否出错, 大于等于400算错误
+    if (statusCode >= 400) {
         qDebug() << Q_FUNC_INFO << "download failed " << statusCode << errorMessage << endl;
         emit failed(downloadId.toLong(), ErrorInfo::NetworkError, ErrorInfo::message(ErrorInfo::NetworkError, errorMessage));
     }
