@@ -126,15 +126,31 @@ void Download::start(QString callbackId, QString url, QString name, QString stor
     QString basePath = getDownloadPath(downloadManager->getStorage());
     QString path = basePath + "/" + name;
 
+
+    QString path = basePath + "/" + name;
+
     // 判断当前文件是否重复，如果重复名称添加序号
     QStringList nameSplit = name.split(".");
     int i = 1;
     while (QFile::exists(path)
            || QFile::exists(path + downloadManager->getDownloadFileSuffix())
            || fileNames.value(path) != NULL) {
-        if (nameSplit.size() > 1) {
+        if (nameSplit.size() == 2) {
+            // 文件名只有一个小数点的情况
             path = basePath + "/" + nameSplit[nameSplit.size() - 2] + "(" + QString::number(i) + ")." + nameSplit[nameSplit.size() - 1];
+        } else if (nameSplit.size() > 2) {
+            // 文件名出现多个小数点的情况，nameSplit.size()-2 是数组倒数第2项
+
+            qDebug() << "lastName 倒数第2项的名字: " << nameSplit[nameSplit.size()-2] << endl;
+
+            QString lastName = nameSplit[nameSplit.size()-2].section('(', 0);
+
+            qDebug() << "lastName 倒数第2项的名字--去掉括号后: " << lastName << endl;
+
+            nameSplit.replace(nameSplit.size()-2, lastName + "(" + QString::number(i) + ")");
+            path = basePath + "/" + nameSplit.join('.');
         } else {
+            // 文件名没有小数点的情况
             path = basePath + "/" + nameSplit[nameSplit.size() - 1] + "(" + QString::number(i) + ")";
         }
         i++;
